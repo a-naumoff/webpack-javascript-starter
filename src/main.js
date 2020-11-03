@@ -1,3 +1,4 @@
+import './styles.scss';
 import { render } from './app/test';
 
 const $app = document.getElementById('app');

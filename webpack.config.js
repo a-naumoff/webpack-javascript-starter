@@ -1,4 +1,7 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const ROOT = path.resolve(__dirname, 'src');
 const DESTINATION = path.resolve(__dirname, 'dist');
@@ -19,7 +22,28 @@ module.exports = {
       'node_modules'
     ]
   },
-  devtool: PROD ? 'eval' : 'eval-cheap-module-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          PROD ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'styles.[hash].css'
+    }),
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    })
+  ],
+  devtool: PROD ? 'eval' : 'eval-source-map',
   devServer: {
     contentBase: DESTINATION,
     compress: true,
